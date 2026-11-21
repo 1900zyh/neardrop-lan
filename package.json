@@ -1,0 +1,14 @@
+{
+  "name": "neardrop-lan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "邻传 NearDrop：无需客户端的局域网文字、图片与文件传输工具",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js --open",
+    "check": "node --check server.js && node --check public/app.js"
+  }
+}

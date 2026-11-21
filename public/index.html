@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#216c51">
+  <meta name="description" content="邻传：通过浏览器，在同一局域网内分享文字、图片和文件。">
+  <title>邻传 NearDrop · 局域网轻松传</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="邻传首页">
+      <span class="brand-mark"><svg aria-hidden="true"><use href="/icons.svg#swap"/></svg></span>
+      <span class="brand-name">邻传 <span>NearDrop</span></span>
+    </a>
+    <div class="top-actions">
+      <button class="text-button help-trigger" id="help-button" aria-label="查看使用指南与连接地址"><svg aria-hidden="true"><use href="/icons.svg#help"/></svg><span>使用指南</span></button>
+      <span id="connection" class="connection connecting" role="status"><i></i><span>正在连接</span></span>
+      <button id="profile-button" class="profile-button" aria-label="修改设备名称"><span id="profile-avatar" class="avatar small">我</span><span id="profile-name">我的设备</span><svg aria-hidden="true"><use href="/icons.svg#edit"/></svg></button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="intro">
+      <div><p class="eyebrow"><span></span> 同一网络，即刻分享</p><h1>让分享，自然而然<span>。</span></h1><p class="intro-copy">从电脑到手机，文字、图片、大文件，打开浏览器就能传。</p></div>
+      <button class="space-button" id="space-button"><span class="space-icon"><svg aria-hidden="true"><use href="/icons.svg#grid"/></svg></span><span><small>当前共享空间</small><strong id="space-name">公共空间</strong></span><svg class="chevron" aria-hidden="true"><use href="/icons.svg#chevron"/></svg></button>
+    </section>
+
+    <div id="network-banner" class="network-banner" hidden role="status"><svg aria-hidden="true"><use href="/icons.svg#wifi-off"/></svg><span>连接已断开，正在重新连接。上传中断后可点击“重试”。</span><button id="reconnect-button">立即重连</button></div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <section class="card devices-card">
+          <div class="section-heading"><h2>在线设备 <span id="device-count" class="count">0</span></h2><span class="radar" aria-label="自动发现设备"></span></div>
+          <div id="devices" class="device-list"><p class="muted device-loading">正在寻找同一空间的设备…</p></div>
+          <p class="device-hint">同一空间的设备会自动出现在这里</p>
+        </section>
+
+        <section class="invite-card">
+          <span class="invite-icon"><svg aria-hidden="true"><use href="/icons.svg#devices"/></svg></span>
+          <h2>连接另一台设备</h2><p>连接同一 Wi-Fi，在浏览器打开下方地址，就能开始分享。</p>
+          <button id="address-button" class="address-button" title="查看可访问的局域网地址"><span id="share-address">正在获取地址…</span><svg aria-hidden="true"><use href="/icons.svg#external"/></svg></button>
+          <button id="copy-link-button" class="invite-copy"><svg aria-hidden="true"><use href="/icons.svg#copy"/></svg><span>复制邀请链接</span></button>
+        </section>
+
+        <div class="privacy-note"><svg aria-hidden="true"><use href="/icons.svg#shield"/></svg><div><strong>不经过云端，近在你身边</strong><p>文件经服务电脑中转，暂存 <span class="retention-hours">24</span> 小时。请仅在可信任的局域网中使用。</p></div></div>
+      </aside>
+
+      <div class="main-column">
+        <section class="card send-card">
+          <div class="send-heading"><div><h2>发送到当前空间</h2><p>空间内的所有设备都能接收</p></div><span class="local-badge"><svg aria-hidden="true"><use href="/icons.svg#wifi"/></svg> 局域网直达</span></div>
+          <div class="tabs" role="tablist" aria-label="发送内容类型"><button id="file-tab" class="tab active" role="tab" aria-selected="true" aria-controls="file-panel"><svg aria-hidden="true"><use href="/icons.svg#folder"/></svg>文件与图片</button><button id="text-tab" class="tab" role="tab" aria-selected="false" aria-controls="text-panel" tabindex="-1"><svg aria-hidden="true"><use href="/icons.svg#message"/></svg>文字消息</button></div>
+          <div id="file-panel" role="tabpanel" aria-labelledby="file-tab">
+            <div class="dropzone" id="dropzone">
+              <div class="upload-art" aria-hidden="true"><span class="art-back"></span><span class="art-front"><svg><use href="/icons.svg#upload"/></svg></span><span class="art-dot"></span></div>
+              <h3>把文件拖到这里</h3><p>文件、照片，或想分享的任何灵感</p>
+              <button id="choose-files-button" class="primary-button"><svg aria-hidden="true"><use href="/icons.svg#plus"/></svg>选择文件</button>
+              <small>支持多选 · 单个文件最大 <span id="max-file-size">2 GB</span><span class="paste-hint"> · 也可直接粘贴图片</span></small>
+            </div>
+          </div>
+          <div id="text-panel" role="tabpanel" aria-labelledby="text-tab" hidden>
+            <form id="message-form"><label class="sr-only" for="message-input">输入要发送的文字</label><textarea id="message-input" maxlength="4000" placeholder="一句话、一段链接，或一闪而过的灵感…" rows="5"></textarea><div class="composer-bottom"><span><span id="character-count">0</span> / 4000 <span class="keyboard-hint">· Ctrl / ⌘ + Enter 发送</span></span><button id="send-message-button" class="primary-button" type="submit"><svg aria-hidden="true"><use href="/icons.svg#send"/></svg>发送文字</button></div></form>
+          </div>
+          <input type="file" id="file-input" multiple hidden>
+        </section>
+
+        <section class="history-section" aria-labelledby="history-heading">
+          <div class="history-heading"><h2 id="history-heading">共享记录 <span id="history-count" class="count">0</span></h2><div class="filters" role="group" aria-label="筛选共享记录"><button data-filter="all" class="active" aria-pressed="true">全部</button><button data-filter="file" aria-pressed="false">文件</button><button data-filter="text" aria-pressed="false">文字</button></div></div>
+          <div id="activity-list" class="activity-list" aria-live="polite" aria-relevant="additions"></div>
+          <p class="history-note"><svg aria-hidden="true"><use href="/icons.svg#clock"/></svg>记录与文件保留 <span class="retention-hours">24</span> 小时，服务重启后清空</p>
+        </section>
+      </div>
+    </div>
+    <footer>少一点等待，多一点连接。<span>NEARDROP · LOCAL IS LOVELY</span></footer>
+  </main>
+
+  <dialog id="help-dialog" class="modal help-modal"><div class="modal-heading"><div><p class="eyebrow">三步，轻松连起来</p><h2>把设备连接在一起</h2></div><button class="icon-button close-dialog" aria-label="关闭"><svg aria-hidden="true"><use href="/icons.svg#close"/></svg></button></div><ol class="guide-steps"><li><span>1</span><div><strong>在一台电脑上启动服务</strong><p>安装 Node.js 20 或更高版本，在项目目录运行 <code>npm start</code>，保持终端打开。</p></div></li><li><span>2</span><div><strong>其他设备打开同一个地址</strong><p>连接同一 Wi-Fi 或局域网，使用下面的局域网地址。手机不能使用 <code>localhost</code>。</p><div id="lan-addresses" class="lan-addresses"></div></div></li><li><span>3</span><div><strong>发送，下载，再确认收到</strong><p>上传时查看进度，失败可重试。接收方点击“下载文件”，进度在浏览器下载管理中查看；保存后点击“确认收到”。文字也可单独确认。</p></div></li></ol><div class="help-note"><strong>连不上？</strong><p>允许 Node.js 通过系统防火墙的专用网络，关闭 Wi-Fi 的访客隔离。公共空间对该空间的访问者可见；六位空间码仅用于分组，HTTP 传输未经端到端加密。</p></div><p class="modal-footnote">暂停或失败后，保留原页面可继续上传；刷新后需重新选择文件发起新传输。接收确认由对方手动操作。</p></dialog>
+
+  <dialog id="space-dialog" class="modal space-modal"><div class="modal-heading"><div><p class="eyebrow">为这一次分享，留个位置</p><h2>切换共享空间</h2></div><button class="icon-button close-dialog" aria-label="关闭"><svg aria-hidden="true"><use href="/icons.svg#close"/></svg></button></div><button id="join-lobby-button" class="lobby-option"><span class="space-icon"><svg aria-hidden="true"><use href="/icons.svg#grid"/></svg></span><span><strong>公共空间</strong><small>打开网页即可相遇，适合快速分享</small></span><svg aria-hidden="true"><use href="/icons.svg#chevron"/></svg></button><div class="separator"><span>或使用六位空间码</span></div><form id="space-form"><label for="room-input">空间码</label><input id="room-input" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="6" placeholder="例如 A3X7K9" pattern="[A-Za-z0-9]{6}" required><p class="field-hint">输入相同的空间码，即可进入同一空间。</p><div class="modal-actions"><button type="button" id="create-room-button" class="secondary-button">创建新空间</button><button class="primary-button" type="submit">加入空间<svg aria-hidden="true"><use href="/icons.svg#arrow-right"/></svg></button></div></form><p class="modal-footnote">空间码用于区分分享范围，不作为身份验证。请只邀请信任的设备。</p></dialog>
+
+  <dialog id="profile-dialog" class="modal profile-modal"><div class="modal-heading"><h2>给设备取个名字</h2><button class="icon-button close-dialog" aria-label="关闭"><svg aria-hidden="true"><use href="/icons.svg#close"/></svg></button></div><form id="profile-form"><label for="name-input">设备名称</label><input id="name-input" maxlength="32" required autocomplete="off" placeholder="例如：我的手机"><p class="field-hint">方便其他设备认出你，最多 32 个字符。</p><button class="primary-button full-width" type="submit">保存名称</button></form></dialog>
+
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+  <div id="drag-overlay" class="drag-overlay" hidden><svg aria-hidden="true"><use href="/icons.svg#upload"/></svg><strong>松开文件，开始分享</strong><span>文件将发送至当前空间</span></div>
+</body>
+</html>
